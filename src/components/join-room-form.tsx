@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   roomid: z.string().min(1).min(5),
-  url: z.string().min(1).min(5),
+  url: z.string().optional(),
 });
 
 export default function JoinRoomForm() {
