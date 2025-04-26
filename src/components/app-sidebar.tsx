@@ -1,33 +1,19 @@
 "use client";
 
 import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { RealtimeChat } from "./realtime-chat";
+import ShareButton from "./ShareButton";
+import { usePathname } from "next/navigation";
+import { RealtimeAvatarStack } from "./realtime-avatar-stack";
+import RoomUrlFacility from "./room-url-facility";
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   roomid: string;
@@ -35,15 +21,17 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
 };
 
 export function AppSidebar(props: AppSidebarProps) {
+  const pathname = usePathname()
+
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
       {...props}
     >
       <SidebarHeader>
-        <SidebarMenu>
-          
-        </SidebarMenu>
+        <div className="flex flex-col justify-between items-center">
+          <RoomUrlFacility roomId={props.roomid}  />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <div className="flex-1 ">

@@ -1,29 +1,37 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { useRealtimeVideoSync } from "@/hooks/useRealtimeVideoSync";
+import { Input } from "./ui/input";
+import { useSearchParams } from "next/navigation";
 
 export default function SyncedVideoPlayer({
   roomName,
   userId,
-  url: initialUrl,
 }: {
   roomName: string;
   userId: string;
-  url?: string;
 }) {
   const playerRef = useRef<ReactPlayer>(null);
-  const [url, setUrl] = useState(initialUrl);
+  const searchParams = useSearchParams();
+  const [url, setUrl] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const {
-    sendPlay,
-    sendPause,
-    sendSeek,
-    ignoreNext,
-  } = useRealtimeVideoSync({ roomName, userId, playerRef });
+  const { sendPlay, sendPause, sendSeek, ignoreNext } = useRealtimeVideoSync({
+    roomName,
+    userId,
+    playerRef,
+  });
+
+   // 🛠 Update `url` whenever searchParams change
+   useEffect(() => {
+    const newUrl = searchParams.get("url");
+    if (newUrl !== url) {
+      setUrl(newUrl);
+    }
+  }, [searchParams]); // 👈 react to changes
 
   const handlePlay = () => {
     if (ignoreNext.current) return;
@@ -54,13 +62,16 @@ export default function SyncedVideoPlayer({
 
   if (!url) {
     return (
-      <div className="w-full flex flex-col items-center justify-center gap-4 border rounded-xl p-6">
-        <p className="text-center text-lg">No video URL provided. Choose a local file to play together:</p>
-        <input
+      <div className=" flex flex-col items-center justify-center gap-4 border rounded-xl p-6">
+        <p className="text-center text-lg">
+          No video URL provided. Choose a local file to play together:
+        </p>
+        <Input
           ref={fileInputRef}
           type="file"
           accept="video/*"
           onChange={handleFileChange}
+          className="border border-dashed rounded-lg p-8 w-full flex items-center justify-center cursor-pointer h-32"
         />
       </div>
     );

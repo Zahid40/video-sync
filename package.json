@@ -32,6 +32,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.56.1",
     "react-player": "^2.16.0",
+    "react-use-web-share": "^1.0.2",
+    "react-web-share": "^2.0.2",
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",

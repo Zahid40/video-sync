@@ -71,7 +71,7 @@ export function NavUser({ user }: { user: User }) {
               <div className="flex flex-col items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-16 rounded-full">
                   {/* <AvatarImage src={user.avatar} alt={user.email} /> */}
-                  <AvatarFallback className="rounded-lg capitalize bg-primary-700 text-lg font-semibold">
+                  <AvatarFallback className="rounded-lg capitalize bg-primary-600 text-lg font-semibold">
                     {user.email?.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
