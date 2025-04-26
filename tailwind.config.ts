@@ -22,7 +22,18 @@ const config: Config = {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+				  50: '#FDF7C8',
+				  100: '#FCF3B4',
+				  200: '#FAEA8D',
+				  300: '#F8DF66',
+				  400: '#F7D33F',
+				  500: '#F5C518',
+				  600: '#CC9D09',
+				  700: '#967007',
+				  800: '#614604',
+				  900: '#2B1E02',
+				  950: '#100B01'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -49,6 +60,16 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {

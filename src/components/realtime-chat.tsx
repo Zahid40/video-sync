@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface RealtimeChatProps {
   roomName: string
@@ -84,8 +83,6 @@ export const RealtimeChat = ({
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
       {/* Messages */}
-      <ScrollArea className="h-72 w-full rounded-md border">
-
       <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {allMessages.length === 0 ? (
           <div className="text-center text-sm text-muted-foreground">
@@ -112,7 +109,6 @@ export const RealtimeChat = ({
           })}
         </div>
       </div>
-      </ScrollArea>
 
       <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
         <Input
