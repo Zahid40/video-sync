@@ -4,6 +4,7 @@ import { createClient } from "@/lib/server";
 import SyncedVideoPlayer from "@/components/SyncedVideoPlayer";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { RealtimeCursors } from "@/components/realtime-cursors";
 
 export default async function RoomIdPage({
   params,
@@ -29,7 +30,10 @@ export default async function RoomIdPage({
               userId={data.user.email!}
             />
 
-           
+            <RealtimeCursors
+              roomName={roomId + "cursor"}
+              username={data.user.email!}
+            />
           </div>
         </div>
       </SidebarInset>
