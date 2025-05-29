@@ -6,6 +6,7 @@ import { useRealtimeVideoSync } from "@/hooks/useRealtimeVideoSync";
 import { Input } from "./ui/input";
 import { useSearchParams } from "next/navigation";
 
+
 export default function SyncedVideoPlayer({
   roomName,
   userId,

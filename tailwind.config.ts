@@ -9,6 +9,10 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		cursor: {
+			default: 'url("/assets/cursor.svg"),  default', 
+			pointer: 'url("/assets/pointer.svg"), pointer',
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

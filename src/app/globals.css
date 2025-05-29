@@ -85,10 +85,24 @@
 
 
 @layer base {
+
+  *,
+*:before,
+*:after {
+  @apply cursor-default;
+}
+a, button {
+  @apply cursor-pointer;
+}
+
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.vjs-texttrack-settings {
+  display: none;
 }

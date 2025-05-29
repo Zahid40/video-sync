@@ -39,17 +39,17 @@ export function useRealtimeVideoSync({
 
       switch (action) {
         case "play":
-          player.seekTo(time, "seconds");
-          player.getInternalPlayer()?.play?.();
-          player.getInternalPlayer()?.playVideo?.(); // for YouTube
+          player.currentTime(time);
+          player.play();
+          // player.getInternalPlayer()?.playVideo?.(); // for YouTube
           break;
         case "pause":
-          player.seekTo(time, "seconds");
-          player.getInternalPlayer()?.pause?.();
-          player.getInternalPlayer()?.pauseVideo?.(); // for YouTube
+          player.currentTime(time);
+          player.pause();
+          // player.getInternalPlayer()?.pauseVideo?.();  for YouTube
           break;
         case "seek":
-          player.seekTo(time, "seconds");
+          player.currentTime(time);
           break;
       }
 
@@ -75,12 +75,9 @@ export function useRealtimeVideoSync({
   };
 
   return {
-    sendPlay: (time: number) =>
-      sendEvent({ userId, action: "play", time }),
-    sendPause: (time: number) =>
-      sendEvent({ userId, action: "pause", time }),
-    sendSeek: (time: number) =>
-      sendEvent({ userId, action: "seek", time }),
+    sendPlay: (time: number) => sendEvent({ userId, action: "play", time }),
+    sendPause: (time: number) => sendEvent({ userId, action: "pause", time }),
+    sendSeek: (time: number) => sendEvent({ userId, action: "seek", time }),
     ignoreNext, // 👈 used in your component to skip local broadcast
   };
 }

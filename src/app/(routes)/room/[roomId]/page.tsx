@@ -5,6 +5,7 @@ import SyncedVideoPlayer from "@/components/SyncedVideoPlayer";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { RealtimeCursors } from "@/components/realtime-cursors";
+import SyncedVideoPlayer2 from "@/components/SyncedVideoPlayer2";
 
 export default async function RoomIdPage({
   params,
@@ -25,7 +26,8 @@ export default async function RoomIdPage({
       <SidebarInset>
         <div className="flex flex-1 flex-col gap-4 p-4 ">
           <div className="flex w-full  mx-auto flex-col  min-h-[90svh] max-h-[calc(90svh-var(--header-height))] justify-center items-center  border border-dashed rounded-xl">
-            <SyncedVideoPlayer
+            {/* to do solve media support error and test syncing then design */}
+            <SyncedVideoPlayer2
               roomName={roomId + "video"}
               userId={data.user.email!}
             />
