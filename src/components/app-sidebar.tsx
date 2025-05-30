@@ -29,20 +29,11 @@ export function AppSidebar(props: AppSidebarProps) {
       {...props}
     >
       <SidebarHeader>
-        <div className="flex flex-col justify-between items-center">
-          <RoomUrlFacility roomId={props.roomid}  />
-        </div>
+        
       </SidebarHeader>
       <SidebarContent>
-        <div className="flex-1 ">
-
-        <RealtimeChat
-          roomName={props.roomid + "chat"}
-          username={props.username}
-        />
-        </div>
+       
       </SidebarContent>
-      <SidebarFooter></SidebarFooter>
     </Sidebar>
   );
 }

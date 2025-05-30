@@ -6,6 +6,13 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { RealtimeCursors } from "@/components/realtime-cursors";
 import SyncedVideoPlayer2 from "@/components/SyncedVideoPlayer2";
+import RoomUrlFacility from "@/components/room-url-facility";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { RealtimeChat } from "@/components/realtime-chat";
 
 export default async function RoomIdPage({
   params,
@@ -23,23 +30,37 @@ export default async function RoomIdPage({
 
   return (
     <div className="flex  flex-1">
-      <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4 ">
-          <div className="flex w-full  mx-auto flex-col  min-h-[90svh] max-h-[calc(90svh-var(--header-height))] justify-center items-center  border border-dashed rounded-xl">
-            {/* to do solve media support error and test syncing then design */}
-            <SyncedVideoPlayer2
-              roomName={roomId + "video"}
-              userId={data.user.email!}
-            />
-
-            <RealtimeCursors
-              roomName={roomId + "cursor"}
-              username={data.user.email!}
-            />
+      <div className="flex flex-1 flex-col gap-4 p-4 ">
+        <div className="flex w-full  mx-auto flex-col  min-h-[90svh] max-h-[calc(90svh-var(--header-height))] justify-center items-center  border border-dashed rounded-xl relative">
+          <div className="absolute top-0 right-0 bg-neutral-500 z-10">
+            <div className="flex flex-col justify-between items-center">
+              <RoomUrlFacility roomId={roomId} />
+            </div>
           </div>
+          <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel>
+              <SyncedVideoPlayer2
+                roomName={roomId + "video"}
+                userId={data.user.email!}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel className="max-w-sm min-w-xs rounded-lg ">
+            <RealtimeChat
+                  roomName={roomId + "chat"}
+                  username={data.user.email?.split("@")[0]!}
+                />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+          {/* to do solve media support error and test syncing then design */}
+
+          <RealtimeCursors
+            roomName={roomId + "cursor"}
+            username={data.user.email!}
+          />
         </div>
-      </SidebarInset>
-      <AppSidebar side="right" roomid={roomId} username={data.user.email!} />
+      </div>
+      {/* <AppSidebar side="right" roomid={roomId} username={data.user.email!} /> */}
     </div>
   );
 }

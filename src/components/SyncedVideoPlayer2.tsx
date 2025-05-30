@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRealtimeVideoSync } from "@/hooks/useRealtimeVideoSync";
 import { Input } from "./ui/input";
 import { useSearchParams } from "next/navigation";
-import videojs from "video.js";
+import videojs, { VideoJsPlayer } from "video.js";
 import "video.js/dist/video-js.css";
 import VideoJS from "./VideoPlayer";
 
@@ -15,9 +15,9 @@ export default function SyncedVideoPlayer({
   roomName: string;
   userId: string;
 }) {
-  const playerRef = useRef(null);
+  const playerRef = useRef<videojs.Player | null>(null);
   const searchParams = useSearchParams();
-  const [LocalFile, setLocalFile] = useState();
+  const [LocalFile, setLocalFile] = useState<File>();
   const [url, setUrl] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -37,20 +37,6 @@ export default function SyncedVideoPlayer({
         backward: 5,
       },
     },
-    userActions: {
-      hotkeys: function (event) {
-        // `this` is the player in this context
-
-        // `x` key = pause
-        if (event.which === 88) {
-          this.pause();
-        }
-        // `y` key = play
-        if (event.which === 89) {
-          this.play();
-        }
-      },
-    },
     spatialNavigation: {
       enabled: true,
       horizontalSeek: true,
@@ -64,13 +50,13 @@ export default function SyncedVideoPlayer({
     textTrackSettings: true,
     fluid: true,
     sources: url
-    ? [
-        {
-          src: url,
-          type: LocalFile?.type || undefined,
-        },
-      ]
-    : [],
+      ? [
+          {
+            src: url,
+            type: "video/webm",
+          },
+        ]
+      : [],
   };
 
   // 🛠 Update `url` whenever searchParams change
@@ -89,57 +75,40 @@ export default function SyncedVideoPlayer({
       }
     };
   }, [url]);
-  
-  
 
-  const handlePlayerReady = (player) => {
+  const handlePlayerReady = (player: VideoJsPlayer) => {
     playerRef.current = player;
 
     // You can handle player events here, for example:
     player.on("waiting", () => {
+      console.log("player is waiting");
       videojs.log("player is waiting");
     });
 
     player.on("dispose", () => {
       videojs.log("player will dispose");
     });
-    player.on("play", () => {
-      console.log("local play");
-      handlePlay();
-    });
-    player.on("pause", () => {
-      console.log("local pause");
-      handlePause();
-    });
-    player.on("seeked", () => {
-      const time = player.currentTime();
-      console.log("local seek", time);
-      handleSeek(time);
-    });
-    
+    // player.on("play", () => {
+    //   console.log("local play");
+    //   if (ignoreNext.current) return;
+    //   const currentTime = playerRef.current?.currentTime?.() ?? 0;
+    //   sendPlay(currentTime);
+    //   setPlaying(true);
+    // });
+    // player.on("pause", () => {
+    //   console.log("local pause");
+    //   if (ignoreNext.current) return;
+    //   const currentTime = playerRef.current?.currentTime?.() ?? 0;
+    //   sendPause(currentTime);
+    //   setPlaying(false);
+    // });
+    // player.on("seeked", () => {
+    //   const currentTime = playerRef.current?.currentTime?.() ?? 0;
+    //   console.log("local seek", currentTime);
+    //   if (ignoreNext.current) return;
+    //   sendSeek(currentTime);
+    // });
   };
-
-  const handlePlay = () => {
-    if (ignoreNext.current) return;
-    const currentTime = playerRef.current?.currentTime?.() ?? 0;
-    sendPlay(currentTime);
-    setPlaying(true);
-  };
-
-  const handlePause = () => {
-    if (ignoreNext.current) return;
-    const currentTime = playerRef.current?.currentTime?.() ?? 0;
-    sendPause(currentTime);
-    setPlaying(false);
-  };
-
-  let lastSeek = 0;
-const handleSeek = (time: number) => {
-  const now = Date.now();
-  if (ignoreNext.current || now - lastSeek < 500) return;
-  lastSeek = now;
-  sendSeek(time);
-};
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

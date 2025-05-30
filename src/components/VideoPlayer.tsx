@@ -1,7 +1,7 @@
 import React from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import "@/style/netflix-vjs.css";
+// import "@/style/netflix-vjs.css";
 import { format } from "date-fns";
 import { Separator } from "./ui/separator";
 
@@ -10,8 +10,8 @@ export const VideoJS = (props: {
   onReady: any;
   LocalFile?: any;
 }) => {
-  const videoRef = React.useRef(null);
-  const playerRef = React.useRef(null);
+  const videoRef = React.useRef<HTMLDivElement | null>(null);
+  const playerRef = React.useRef<videojs.Player | null>(null);
   const { options, onReady, LocalFile } = props;
 
   React.useEffect(() => {
@@ -22,7 +22,7 @@ export const VideoJS = (props: {
 
       videoElement.classList.add("vjs-big-play-centered");
       videoElement.classList.add("vjs-default-skin");
-      videoRef.current.appendChild(videoElement);
+      videoRef?.current?.appendChild(videoElement);
 
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log("player is ready");
@@ -36,15 +36,15 @@ export const VideoJS = (props: {
 
       player.autoplay(options.autoplay);
       player.src(options.sources);
-      var tracks = player.textTracks();
-      for (var i = 0; i < tracks.length; i++) {
-        var track = tracks[i];
+      // var tracks = player.textTracks();
+      // for (var i = 0; i < tracks.length; i++) {
+      //   var track = tracks[i];
 
-        // Find the English captions track and mark it as "showing".
-        if (track.kind === "captions" && track.language === "en") {
-          track.mode = "showing";
-        }
-      }
+      //   // Find the English captions track and mark it as "showing".
+      //   if (track.kind === "captions" && track.language === "en") {
+      //     track.mode = "showing";
+      //   }
+      // }
     }
   }, [options, videoRef]);
 
@@ -65,7 +65,13 @@ export const VideoJS = (props: {
       {LocalFile && (
         <div className="absolute -top-10 group-hover:top-0 transition-all duration-500 ease-in-out blur-lg group-hover:blur-0 opacity-0 group-hover:opacity-100 left-0 z-10 p-2 border-l-2 m-2 border-primary-500 bg-linear-to-r from-cyan-500 to-blue-500 ">
           <h2 className=" text-lg text-neutral-400 ">{LocalFile.name}</h2>
-          <p className="text-[10px] text-neutral-300 flex">File size : {(LocalFile.size/ (1024 ** 3)).toFixed(2)}{" Gb"}<Separator orientation="vertical" className="h-4 w-px mx-2" />{"Last Updated : "}{format(LocalFile.lastModifiedDate , "EEE dd MMM yyyy")}</p>
+          <div className="text-[10px] text-neutral-300 flex">
+            File size : {(LocalFile.size / 1024 ** 3).toFixed(2)}
+            {" Gb"}
+            <Separator orientation="vertical" className="h-4 w-px mx-2" />
+            {"Last Updated : "}
+            {format(LocalFile.lastModifiedDate, "EEE dd MMM yyyy")}
+          </div>
         </div>
       )}
       <div ref={videoRef} />

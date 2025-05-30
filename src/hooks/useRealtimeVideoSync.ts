@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 type SyncPayload = {
   userId: string;
-  action: "play" | "pause" | "seek";
+  action: "play" | "pause" | "seeked";
   time: number;
 };
 
@@ -48,7 +48,7 @@ export function useRealtimeVideoSync({
           player.pause();
           // player.getInternalPlayer()?.pauseVideo?.();  for YouTube
           break;
-        case "seek":
+        case "seeked":
           player.currentTime(time);
           break;
       }
@@ -77,7 +77,7 @@ export function useRealtimeVideoSync({
   return {
     sendPlay: (time: number) => sendEvent({ userId, action: "play", time }),
     sendPause: (time: number) => sendEvent({ userId, action: "pause", time }),
-    sendSeek: (time: number) => sendEvent({ userId, action: "seek", time }),
+    sendSeek: (time: number) => sendEvent({ userId, action: "seeked", time }),
     ignoreNext, // 👈 used in your component to skip local broadcast
   };
 }
