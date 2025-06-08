@@ -21,23 +21,20 @@ export default async function RoomIdPage({
   }
 
   return (
-    <div className="flex  flex-1">
-      <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4 ">
-          <div className="flex w-full  mx-auto flex-col  min-h-[90svh] max-h-[calc(90svh-var(--header-height))] justify-center items-center  border border-dashed rounded-xl">
-            <SyncedVideoPlayer
-              roomName={roomId + "video"}
-              userId={data.user.email!}
-            />
+    <div className="flex  flex-1 max-h-svh h-svh p-2 items-center justify-center">
+      <div className="flex w-full  mx-auto flex-col max-h-svh   h-full  justify-center items-center  border border-dashed rounded-xl">
+        <SyncedVideoPlayer
+          roomName={roomId + "video"}
+          userId={data.user.email!}
+        />
 
-            <RealtimeCursors
-              roomName={roomId + "cursor"}
-              username={data.user.email!}
-            />
-          </div>
-        </div>
-      </SidebarInset>
-      <AppSidebar side="right" roomid={roomId} username={data.user.email!} />
+        <RealtimeCursors
+          roomName={roomId + "cursor"}
+          username={data.user.email!}
+        />
+      </div>
+
+      {/* <AppSidebar side="right" roomid={roomId} username={data.user.email!} /> */}
     </div>
   );
 }

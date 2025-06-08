@@ -13,14 +13,14 @@ export const Cursor = ({
   name: string
 }) => {
   return (
-    <div className={cn('pointer-events-none', className)} style={style}>
-      <MousePointer2 color={color} fill={color} size={30} />
+    <div className={cn('select-none group', className)} style={style}>
+      <MousePointer2 color={color} fill={color} size={24} />
 
       <div
-        className="mt-1 px-2 py-1 rounded text-xs font-bold text-white text-center"
+        className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out mt-1 p-1 rounded-lg text-[10px] font-medium text-white text-center"
         style={{ backgroundColor: color }}
       >
-        {name}
+        {name.split('@')[0]}
       </div>
     </div>
   )

@@ -18,11 +18,6 @@ export default async function mainLayout({
 
   const userData = data.user;
   return (
-    <div className="[--header-height:calc(theme(spacing.14))]">
-      <SidebarProvider className="flex flex-col" >
-        <SiteHeader user={userData} />
-        {children}
-      </SidebarProvider>
-    </div>
+    <div className=" min-h-svh h-full w-full">{children}</div>
   );
 }
