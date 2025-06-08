@@ -8,7 +8,7 @@ import Link from "next/link";
 export function Navbar({ user }: { user: User }) {
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
-      <div className="flex h-[--header-height] w-full items-center gap-2 px-4 py-4">
+      <div className="flex h-(--header-height) w-full items-center gap-2 px-4 py-4">
         <Link href={"/"} className="flex gap-2 items-center  flex-1">
           <Logo className="size-10" />
           <div className="flex flex-col justify-center ">
