@@ -5,15 +5,19 @@ import { NavUser } from "./nav-user";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 
-export function Navbar({ user }: { user: User }) {
+export function Navbar({
+  user,
+}: {
+  user: { username?: any; avatar_url?: any } & User;
+}) {
   return (
-    <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
-      <div className="flex h-(--header-height) w-full items-center gap-2 px-4 py-4">
-        <Link href={"/"} className="flex gap-2 items-center  flex-1">
+    <header className="flex sticky top-0 z-50 w-full items-center bg-transparent">
+      <div className="flex w-full items-center gap-2 px-4 py-4">
+        <Link href={"/"} className="flex gap-2 items-center flex-1">
           <Logo className="size-10" />
           <div className="flex flex-col justify-center ">
             <p className="font-semibold leading-4">{APP_CONFIG.title}</p>
-            <p className=" text-[9px]">fun with friends </p>
+            <p className="text-[9px]">fun with friends</p>
           </div>
         </Link>
 

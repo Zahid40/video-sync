@@ -1,6 +1,6 @@
 {
-  "name": "Letzplay",
-  "short_name": "Letzplay",
+  "name": "Roomieo",
+  "short_name": "Roomieo",
   "icons": [
     {
       "src": "/icon/web-app-manifest-144x144.png",
@@ -27,8 +27,8 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#27210c",
-  "background_color": "#27210c",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
   "display": "standalone",
   "start_url": "/"
 }
