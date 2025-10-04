@@ -39,21 +39,13 @@ export function NavUser({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-        >
-          <Avatar className="h-8 w-8 rounded-lg">
+        <Button size="icon" className="rounded-full">
+          <Avatar className="h-8 w-8 rounded-dull">
             <AvatarImage src={user.avatar_url} alt={user.username} />
-            <AvatarFallback className="rounded-lg bg-primary-100 ">
+            <AvatarFallback className=" bg-primary-700 capitalize text-center flex items-center justify-center">
               {user.username ? user.username.slice(0, 1) : "U"}
             </AvatarFallback>
           </Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{user.username}</span>
-            <span className="truncate text-xs">{user.email}</span>
-          </div>
-          <ChevronsUpDown className="ml-auto size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent

@@ -26,7 +26,6 @@ export default async function dashboardLayout({
     ...userData,
     ...profile?.[0], // Assuming profile is an array and you want the first element
   };
-  console.log("user", user);
 
   return (
     <div className="relative min-h-svh h-full w-full">
