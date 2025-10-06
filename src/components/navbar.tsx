@@ -2,14 +2,10 @@
 import Logo from "./Logo";
 import { APP_CONFIG } from "../../const";
 import { NavUser } from "./nav-user";
-import { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { UserType } from "@/types/type";
 
-export function Navbar({
-  user,
-}: {
-  user: { username?: any; avatar_url?: any } & User;
-}) {
+export function Navbar({ user }: { user: UserType }) {
   return (
     <header className="flex sticky top-0 z-50 w-full items-center bg-transparent">
       <div className="flex w-full items-center gap-2 px-4 py-4">
@@ -22,7 +18,7 @@ export function Navbar({
         </Link>
 
         <div className="flex items-center gap-2">
-          <NavUser user={user} />
+          <NavUser />
         </div>
       </div>
     </header>
