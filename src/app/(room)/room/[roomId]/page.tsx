@@ -14,7 +14,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/user/nav-user";
 import { getUser } from "@/action/user/user.action";
 import RoomUrlFacility from "@/components/room-url-facility";
 import { RealtimeChat } from "@/components/realtime-chat";

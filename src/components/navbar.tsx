@@ -1,7 +1,7 @@
 "use client";
 import Logo from "./Logo";
 import { APP_CONFIG } from "../../const";
-import { NavUser } from "./nav-user";
+import { NavUser } from "./user/nav-user";
 import Link from "next/link";
 import { UserType } from "@/types/type";
 

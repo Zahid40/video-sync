@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "./Logo";
 import { APP_CONFIG } from "../../const";
-import { NavUser } from "./nav-user";
+import { NavUser } from "./user/nav-user";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 

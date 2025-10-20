@@ -7,18 +7,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Link from "next/link";
 import { Calendar, Clock, Edit } from "iconsax-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { FaQuestion } from "react-icons/fa";
 import { format, formatDistance, subDays } from "date-fns";
 import { UserType } from "@/types/type";
-import { useUser } from "./provider/user-provider";
+import { useUser } from "../provider/user-provider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UserAvatar from "./user-avatar";
+import UserAvatar from "../user-avatar";
 import { logoutUser, updateUser } from "@/action/user/user.action";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAllUsers, getFriendsList } from "@/action/user/profile.action";
+import FriendProfileUser from "./friend-profile-user";
+import { ScrollArea } from "../ui/scroll-area";
 
 // Editable User Info Tab
 const UserInfo = ({ user }: { user: UserType }) => {
@@ -145,7 +148,7 @@ export function NavUser() {
     {
       label: "Friends",
       value: "tab-2",
-      content: <UserFriends userId={user?.id} />,
+      content: <UserFriends />,
     },
     {
       label: "Rooms",
@@ -174,7 +177,11 @@ export function NavUser() {
         >
           <TabsList className="flex-col h-full bg-primary-950">
             {tabData.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value} className="w-full min-w-12">
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="w-full min-w-12"
+              >
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -193,9 +200,90 @@ export function NavUser() {
 }
 
 // Example tab content components
-const UserFriends = ({ userId }: { userId: string }) => (
-  <div>Show user's projects, rooms, histories here using userId</div>
-);
+const UserFriends = () => {
+  // const friends = getFriendsList();
+  const [activeTab, setActiveTab] = useState("friends");
+  const [allUsers, setAllUsers] = useState<UserType[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [friends, setFriends] = useState<UserType[] | null>(null);
+  const [requests, setRequests] = useState<UserType[] | null>(null);
+  
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    getAllUsers()
+      .then((data) => {
+        if (mounted) setAllUsers(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch users:", err);
+        if (mounted) setError(String(err));
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return (
+    <div>
+      <h2 className="text-lg font-semibold mb-4">Friends List</h2>
+      <Tabs defaultValue="friends" onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="friends">Friends</TabsTrigger>
+          <TabsTrigger value="requests">Friend Requests</TabsTrigger>
+          <TabsTrigger value="all">All Users</TabsTrigger>
+        </TabsList>
+        <TabsContent value="friends">
+          {/* Friends List Content */}
+          <div>
+            {friends && friends.length > 0 ? (
+              <ul className="space-y-2">
+                {friends.map((friend) => (
+                  <li key={friend.id} className="p-2 border rounded-md">
+                    <div className="flex items-center gap-2">
+                      <UserAvatar user={friend} className="size-8" />
+                      <span className="font-medium">{friend.username}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No friends found.</p>
+            )}
+          </div>
+        </TabsContent>
+        <TabsContent value="requests">
+          {/* Friend Requests Content */}
+          <div>Show friend requests here using userId</div>
+        </TabsContent>
+        <TabsContent value="all">
+          {/* All Users Content */}
+          <ScrollArea className="h-96">
+            {loading ? (
+              <p>Loading users...</p>
+            ) : error ? (
+              <p className="text-red-500">Error: {error}</p>
+            ) : allUsers && allUsers.length > 0 ? (
+              <ul className="space-y-2">
+                {allUsers.map((user) => (
+                  <FriendProfileUser key={user.id} user={user} type="sent" />
+                ))}
+              </ul>
+            ) : (
+              <p>No users found.</p>
+            )}
+          </ScrollArea>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
 
 const UserRooms = ({ userId }: { userId: string }) => (
   <div>Show user's subscription or packages here using userId</div>
