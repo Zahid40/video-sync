@@ -20,7 +20,7 @@ export const Cursor = ({
         className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out mt-1 p-1 rounded-lg text-[10px] font-medium text-white text-center"
         style={{ backgroundColor: color }}
       >
-        {name.split('@')[0]}
+        {name}
       </div>
     </div>
   )
