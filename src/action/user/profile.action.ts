@@ -12,19 +12,25 @@ export const getFriendsList = async (): Promise<UserType[]> => {
   const user = userData?.user;
 
   if (authenticationError || !user?.id) {
-    return {} as UserType[];
+    return [] as UserType[];
   }
 
   const { data: profileData, error: profileError } = await supabaseClient
     .from("friendships")
-    .select("*, profiles!friend_id_fkey(id, username, email, avatar_url)")
+    .select("*, profiles!friend_id_fkey(id, display_name, email, avatar_url)")
     .eq("user_id", user.id);
 
   if (profileError || !profileData) {
-    return {} as UserType[];
+    return [] as UserType[];
   }
 
-  return profileData as UserType[];
+  return (profileData || []).map((f: any) => {
+    const p = f.profiles;
+    return {
+      ...p,
+      username: p?.display_name || "",
+    } as UserType;
+  });
 };
 
 export const getAllProfiles = async (): Promise<UserType[]> => {
@@ -32,13 +38,16 @@ export const getAllProfiles = async (): Promise<UserType[]> => {
   // optional: you may want to restrict this to authenticated users
   const { data, error } = await supabaseClient
     .from("profiles")
-    .select("id, username, avatar_url");
+    .select("id, display_name, avatar_url");
 
   if (error) {
     throw error;
   }
 
-  return data as UserType[];
+  return (data || []).map((p: any) => ({
+    ...p,
+    username: p.display_name,
+  })) as UserType[];
 };
 
 /**
@@ -71,7 +80,7 @@ export const addFriend = async (
         status: "pending",
         sent_at: new Date().toISOString(),
       },
-      { onConflict: ["sender_id", "recipient_id"], returning: "minimal" }
+      { onConflict: "sender_id,recipient_id" }
     );
 
   if (upsertError) {
@@ -97,9 +106,7 @@ export const addFriend = async (
     // create friendship (use canonical ordering, primary key conflicts ignored)
     const { error: insertFriendError } = await supabaseClient
       .from("friendships")
-      .insert([{ user_id: senderId, friend_id: recipientId }], {
-        returning: "minimal",
-      })
+      .insert([{ user_id: senderId, friend_id: recipientId }])
       .maybeSingle();
 
     if (insertFriendError) {
@@ -177,7 +184,6 @@ export const removeFriend = async (
   return { success: true, message: "Friend removed" };
 };
 
-// get all users except the current user
 export const getAllUsers = async (): Promise<UserType[]> => {
   const user = await getUser();
   const supabase = await createClient();
@@ -188,5 +194,9 @@ export const getAllUsers = async (): Promise<UserType[]> => {
     .not("id", "eq", user.id)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return profiles ?? [];
+  
+  return (profiles || []).map((p: any) => ({
+    ...p,
+    username: p.display_name,
+  })) as UserType[];
 };

@@ -28,6 +28,7 @@ export const getUser = async (): Promise<UserType> => {
   // Spread profile first, then add User fields
   return {
     ...profile,       // fields from "profiles"
+    username: profile.display_name, // Map display_name to username
     ...authUser       // Supabase auth user fields
   } as UserType;
 };
@@ -53,10 +54,16 @@ export const updateUser = async (updates: UpdateUserInput): Promise<UserType> =>
     return {} as UserType;
   }
 
+  const profileUpdates: any = { ...updates };
+  if ("username" in profileUpdates) {
+    profileUpdates.display_name = profileUpdates.username;
+    delete profileUpdates.username;
+  }
+
   const { data: profile, error } = await supabase
     .from("profiles")
     .update({
-      ...updates,
+      ...profileUpdates,
       updated_at: new Date().toISOString(),
     })
     .eq("id", authUser.id)
@@ -70,6 +77,7 @@ export const updateUser = async (updates: UpdateUserInput): Promise<UserType> =>
   // Always return merged object
   return {
     ...profile,
+    username: profile.display_name,
     ...authUser
   } as UserType;
 };

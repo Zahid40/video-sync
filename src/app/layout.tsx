@@ -6,6 +6,7 @@ import { APP_CONFIG } from "../../const";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { UserProvider } from "@/components/provider/user-provider";
 import { getUser } from "@/action/user/user.action";
+import { AuthProvider } from "@/hooks/auth";
 import { Tooltip } from "@/components/ui/tooltip";
 
 // If loading a variable font, you don't need to specify the font weight
@@ -31,11 +32,13 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Roomieo" />
       </head>
       <body className={`${dm_sans.className}  antialiased`}>
-        <UserProvider initialUser={user}>
-          <ThemeProvider attribute="class" defaultTheme="dark">
-            {children}
-          </ThemeProvider>
-        </UserProvider>
+        <AuthProvider>
+          <UserProvider initialUser={user}>
+            <ThemeProvider attribute="class" defaultTheme="dark">
+              {children}
+            </ThemeProvider>
+          </UserProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>

@@ -127,7 +127,7 @@ function CommandInput({
           className,
         )}
         placeholder={placeholder}
-        ref={inputRef}
+        ref={inputRef as any}
         size="lg"
         startAddon={<SearchIcon />}
         {...props}

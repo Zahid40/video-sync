@@ -1,10 +1,11 @@
-import { UpdatePasswordForm } from '@/components/update-password-form'
+"use client"
+import { ResetPasswordForm } from '@/components/reset-password-form'
 
 export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <UpdatePasswordForm />
+      <div className="w-full max-w-md">
+        <ResetPasswordForm onSuccess={() => { window.location.href = "/auth/login"; }} />
       </div>
     </div>
   )

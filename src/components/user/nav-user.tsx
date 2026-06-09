@@ -1,150 +1,45 @@
 "use client";
-import { LogOut, Mail } from "lucide-react";
+import { LogOut } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import Link from "next/link";
-import { Calendar, Clock, Edit } from "iconsax-react";
-import { Separator } from "../ui/separator";
-import { FaQuestion } from "react-icons/fa";
-import { format, formatDistance, subDays } from "date-fns";
 import { UserType } from "@/types/type";
 import { useUser } from "../provider/user-provider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserAvatar from "../user-avatar";
-import { logoutUser, updateUser } from "@/action/user/user.action";
+import { logoutUser } from "@/action/user/user.action";
 import React, { useState, useEffect } from "react";
-import { getAllUsers, getFriendsList } from "@/action/user/profile.action";
+import { getAllUsers } from "@/action/user/profile.action";
 import FriendProfileUser from "./friend-profile-user";
 import { ScrollArea } from "../ui/scroll-area";
+import { UserProfileForm } from "@/components/user-profile-form";
+import { UserSecuritySettings } from "@/components/user-security-settings";
+import { DeleteAccountDialog } from "@/components/delete-account-dialog";
 
-// Editable User Info Tab
-const UserInfo = ({ user }: { user: UserType }) => {
-  const [editable, setEditable] = useState(false);
-  const [formData, setFormData] = useState({
-    username: user?.username || "",
-  });
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSave = async () => {
-    setLoading(true);
-    await updateUser({
-      username: formData.username,
-    });
-    setEditable(false);
-    setLoading(false);
-  };
-
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="relative">
-        <UserAvatar user={user} className="size-32" isEditable />
-      </div>
-      <h2 className="text-2xl font-semibold tracking-wide">
-        {!editable ? (
-          user?.username
-        ) : (
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            className="border rounded px-2 py-1"
-            onChange={handleChange}
-          />
-        )}
-      </h2>
-      <div className="w-full space-y-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground text-sm">Email</span>
-          </div>
-
-          <span className="text-sm">{user?.email}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground text-sm">Created At</span>
-          </div>
-          <span className="text-sm">
-            {format(new Date(user?.created_at), "dd MMM yyyy")}
-          </span>
-        </div>
-      </div>
-      <Separator />
-      <div className="flex flex-col justify-between items-center w-full gap-6">
-        <div className="flex flex-row gap-4 w-full">
-          {editable ? (
-            <>
-              <Button
-                variant="default"
-                className="flex items-center gap-2 w-full"
-                onClick={handleSave}
-                disabled={loading}
-              >
-                Save
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2"
-                onClick={() => setEditable(false)}
-                disabled={loading}
-              >
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="default"
-                className="flex items-center gap-2 w-full"
-                onClick={() => setEditable(true)}
-              >
-                <Edit className="size-6" />
-                Edit
-              </Button>
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2"
-                onClick={logoutUser}
-              >
-                <LogOut className="size-6" />
-                Logout
-              </Button>
-            </>
-          )}
-        </div>
-        <div className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
-          <Clock className="size-3" />
-          last updated{" "}
-          {formatDistance(subDays(new Date(user?.updated_at!), 0), new Date(), {
-            addSuffix: true,
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // Main NavUser Dialog
 export function NavUser() {
   const { user } = useUser();
 
   const tabData = [
-    { label: "Profile", value: "tab-1", content: <UserInfo user={user} /> },
+    { 
+      label: "Profile", 
+      value: "tab-profile", 
+      content: <UserProfileForm /> 
+    },
+    { 
+      label: "Security", 
+      value: "tab-security", 
+      content: (
+        <div className="flex flex-col gap-6">
+          <UserSecuritySettings />
+          <DeleteAccountDialog />
+        </div>
+      ) 
+    },
     {
       label: "Friends",
       value: "tab-2",
@@ -167,28 +62,38 @@ export function NavUser() {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="aspect-square w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl p-1 bg-primary-950"
+        className="w-full max-w-4xl h-[650px] p-0 bg-background border border-border sm:rounded-3xl overflow-hidden shadow-2xl flex flex-row"
         aria-describedby={"Profile Dialog"}
       >
         <Tabs
-          defaultValue="tab-1"
+          defaultValue="tab-profile"
           orientation="vertical"
-          className="w-full flex-row"
+          className="w-full h-full flex flex-row"
         >
-          <TabsList className="flex-col h-full bg-primary-950">
-            {tabData.map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="w-full min-w-12"
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
+          <TabsList className="flex-col justify-between h-full bg-muted/30 p-3 border-r border-border min-w-40 gap-1.5 rounded-none">
+            <div className="flex flex-col gap-1.5 w-full">
+              {tabData.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="w-full text-left justify-start px-3 py-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium text-sm transition-all"
+                >
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </div>
+            <Button
+              variant="ghost"
+              onClick={logoutUser}
+              className="w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive px-3 py-2.5 rounded-xl gap-2 mt-auto text-sm font-semibold"
+            >
+              <LogOut className="size-4" />
+              Sign Out
+            </Button>
           </TabsList>
-          <div className="grow rounded-md border text-start p-4">
+          <div className="flex-1 text-start p-6 overflow-y-auto bg-background">
             {tabData.map((tab) => (
-              <TabsContent key={tab.value} value={tab.value}>
+              <TabsContent key={tab.value} value={tab.value} className="h-full mt-0 focus-visible:outline-hidden">
                 {tab.content}
               </TabsContent>
             ))}
@@ -286,5 +191,5 @@ const UserFriends = () => {
 };
 
 const UserRooms = ({ userId }: { userId: string }) => (
-  <div>Show user's subscription or packages here using userId</div>
+  <div>Show user&apos;s subscription or packages here using userId</div>
 );

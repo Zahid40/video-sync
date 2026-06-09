@@ -1,12 +1,18 @@
 "use client";
 import Aurora from "@/components/Aurora";
-import { LoginForm } from "@/components/login-form";
+import { SignInForm } from "@/components/sign-in-form";
 
 export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <LoginForm />
+      <div className="w-full max-w-md">
+        <SignInForm
+          signUpUrl="/auth/sign-up"
+          forgotPasswordUrl="/auth/forgot-password"
+          onSuccess={() => {
+            window.location.href = "/auth/callback"
+          }}
+        />
       </div>
     </div>
   );

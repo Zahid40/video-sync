@@ -1,10 +1,12 @@
 "use client";
 
 import { UserType } from "@/types/type";
+import { useAuth } from "@/hooks/auth";
 import {
   createContext,
   useContext,
   useState,
+  useEffect,
   ReactNode,
   Dispatch,
   SetStateAction,
@@ -27,7 +29,23 @@ export const UserProvider = ({
   initialUser: UserType;
   children: ReactNode;
 }) => {
+  const { user: authUser, profile, loading } = useAuth();
   const [user, setUser] = useState<UserType>(initialUser);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (!authUser) {
+      setUser({} as UserType);
+      return;
+    }
+
+    setUser({
+      ...profile,
+      username: profile?.display_name || "",
+      ...authUser,
+    } as UserType);
+  }, [authUser, profile, loading]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

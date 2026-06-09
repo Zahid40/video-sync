@@ -24,10 +24,8 @@ export default function NotFoundPage() {
       <div className="relative min-h-svh w-full flex flex-col gap-4 items-center justify-center p-6 md:p-10  ">
         <h1 className="text-center text-5xl">404</h1>
         <h2 className="text-3xl">Something went wrong</h2>
-        <Button asChild >
-          <Link href="/">
-            Go to Home
-          </Link>
+        <Button asChild>
+          <Link href="/">Go to Home</Link>
         </Button>
       </div>
     </div>

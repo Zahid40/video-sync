@@ -7,107 +7,59 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OAuthButtons } from "./oauth-buttons"
 
-export function SignUpForm({
+export function SignInForm({
   onSuccess,
-  signInUrl = "/sign-in",
+  signUpUrl = "/sign-up",
+  forgotPasswordUrl = "/forgot-password",
 }: {
   onSuccess?: () => void
-  signInUrl?: string
+  signUpUrl?: string
+  forgotPasswordUrl?: string
 }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [displayName, setDisplayName] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [needsVerification, setNeedsVerification] = useState(false)
 
   const supabase = createClient()
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
     try {
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            display_name: displayName,
-          },
-        },
       })
 
-      if (signUpError) throw signUpError
+      if (signInError) throw signInError
 
-      // If user is returned and session is active, trigger onSuccess
-      if (data.session) {
-        if (onSuccess) {
-          onSuccess()
-        } else {
-          window.location.href = "/"
-        }
+      if (onSuccess) {
+        onSuccess()
       } else {
-        // Needs email verification
-        setNeedsVerification(true)
+        window.location.href = "/"
       }
     } catch (err: any) {
-      setError(err.message || "Failed to create an account.")
+      setError(err.message || "Invalid email or password.")
     } finally {
       setLoading(false)
     }
-  }
-
-  if (needsVerification) {
-    return (
-      <div className="w-full max-w-md p-8 bg-card border border-border rounded-3xl shadow-xl flex flex-col gap-6 text-center">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Check your email
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            We have sent a verification link to <strong className="text-foreground">{email}</strong>.
-            Please check your inbox and click the link to verify your account.
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            window.location.href = signInUrl
-          }}
-          className="w-full h-10"
-        >
-          Return to Sign In
-        </Button>
-      </div>
-    )
   }
 
   return (
     <div className="w-full max-w-md p-8 bg-card border border-border rounded-3xl shadow-xl flex flex-col gap-6">
       <div className="flex flex-col gap-2 text-center">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
-          Create an account
+          Welcome back
         </h2>
         <p className="text-sm text-muted-foreground">
-          Start your centralized user experience
+          Enter your details to access your account
         </p>
       </div>
 
-      <form onSubmit={handleSignUp} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="displayName">Full name</Label>
-          <Input
-            id="displayName"
-            type="text"
-            placeholder="John Doe"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </div>
-
+      <form onSubmit={handleSignIn} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email">Email address</Label>
           <Input
@@ -122,7 +74,15 @@ export function SignUpForm({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password">Password</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Password</Label>
+            <a
+              href={forgotPasswordUrl}
+              className="text-xs text-primary hover:underline"
+            >
+              Forgot password?
+            </a>
+          </div>
           <Input
             id="password"
             type="password"
@@ -141,7 +101,7 @@ export function SignUpForm({
         )}
 
         <Button type="submit" className="w-full h-10 mt-2" disabled={loading}>
-          {loading ? "Creating account..." : "Sign Up"}
+          {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
 
@@ -157,9 +117,9 @@ export function SignUpForm({
       <OAuthButtons />
 
       <p className="text-center text-xs text-muted-foreground mt-2">
-        Already have an account?{" "}
-        <a href={signInUrl} className="font-semibold text-primary hover:underline">
-          Sign in
+        Don&apos;t have an account?{" "}
+        <a href={signUpUrl} className="font-semibold text-primary hover:underline">
+          Sign up
         </a>
       </p>
     </div>

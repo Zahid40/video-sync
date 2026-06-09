@@ -11,7 +11,7 @@ import { NavUser } from "./user/nav-user";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 
-export function SiteHeader({ user }: { user: User }) {
+export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -36,7 +36,7 @@ export function SiteHeader({ user }: { user: User }) {
           </Button>
 
           <Separator orientation="vertical" className="mr-2 h-4" />
-          <NavUser user={user} />
+          <NavUser />
         </div>
       </div>
     </header>

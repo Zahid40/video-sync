@@ -4,6 +4,7 @@ import { APP_CONFIG } from "../../const";
 import { NavUser } from "./user/nav-user";
 import Link from "next/link";
 import { UserType } from "@/types/type";
+import { UserMenu } from "./user-menu";
 
 export function Navbar({ user }: { user: UserType }) {
   return (
@@ -18,7 +19,8 @@ export function Navbar({ user }: { user: UserType }) {
         </Link>
 
         <div className="flex items-center gap-2">
-          <NavUser />
+          {/* <NavUser /> */}
+          <UserMenu />
         </div>
       </div>
     </header>

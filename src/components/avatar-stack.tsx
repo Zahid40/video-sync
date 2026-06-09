@@ -41,13 +41,11 @@ const AvatarStack = ({
     <div className={cn("flex gap-1",className )} {...props}>
       {shownAvatars.map(({ name }, index) => (
         <Tooltip key={`${name}-${index}`}>
-          <TooltipTrigger asChild>
-            <Avatar className="hover:z-10">
-              {/* <AvatarImage src={image} /> */}
-              <AvatarFallback className="rounded-lg capitalize bg-primary-600 text-lg font-semibold">
-                {name?.slice(0, 2)}
-              </AvatarFallback>
-            </Avatar>
+          <TooltipTrigger render={<Avatar className="hover:z-10" />}>
+            {/* <AvatarImage src={image} /> */}
+            <AvatarFallback className="rounded-lg capitalize bg-primary-600 text-lg font-semibold">
+              {name?.slice(0, 2)}
+            </AvatarFallback>
           </TooltipTrigger>
           <TooltipContent>
             <p>{name}</p>
@@ -57,12 +55,10 @@ const AvatarStack = ({
 
       {hiddenAvatars.length ? (
         <Tooltip key="hidden-avatars">
-          <TooltipTrigger asChild>
-            <Avatar>
-              <AvatarFallback>
-                +{avatars.length - shownAvatars.length}
-              </AvatarFallback>
-            </Avatar>
+          <TooltipTrigger render={<Avatar />}>
+            <AvatarFallback>
+              +{avatars.length - shownAvatars.length}
+            </AvatarFallback>
           </TooltipTrigger>
           <TooltipContent>
             {hiddenAvatars.map(({ name }, index) => (
